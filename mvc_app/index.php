@@ -1,38 +1,39 @@
 <?php
 // index.php
+session_start();
+
+// Автозагрузка классов
+spl_autoload_register(function ($class) {
+    $prefixes = [
+        'Core\\' => 'core/',
+        'Controllers\\' => 'controllers/',
+        'Models\\' => 'models/',
+        'Views\\' => 'views/'
+    ];
+    
+    foreach ($prefixes as $prefix => $base_dir) {
+        $len = strlen($prefix);
+        if (strncmp($prefix, $class, $len) !== 0) {
+            continue;
+        }
+        
+        $relative_class = substr($class, $len);
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+        
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
+});
+
 require_once 'config/database.php';
-require_once 'models/Model.php';
-require_once 'controllers/Controller.php';
-require_once 'views/View.php';
+require_once 'config/routes.php';
 
-// error_reporting(E_WARNING);
-// ini_set('display_errors', '1');
+// Инициализация
+$request = new Core\Request();
+$response = new Core\Response();
+$router = new Core\Router($routes);
 
-// try {
-
-// Инициализация компонентов
-$model = new Model();
-$controller = new Controller($model);
-$view = new View($controller, $model);
-
-// Обработка действий
-if (isset($_GET['action']) && !empty($_GET['action'])) {
-    $action = $_GET['action'];
-    if (method_exists($controller, $action)) {
-        $controller->$action();
-    }
-}
-// Обработка POST действий (данные из формы)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $action = $_POST['action'];
-    if (method_exists($controller, $action)) {
-        $controller->$action();
-    }
-}
-// Вывод результата
-echo $view->output();
-
-/* } catch (Throwable $ex) {
-    echo $ex->getMessage();
-} */
+// Обработка запроса
+$router->dispatch($request, $response);
 ?>
