@@ -6,14 +6,33 @@ class Request {
     private $uri;
     private $params;
     private $data;
-    
+    private $basePath = '/mvc_app'; // Добавляем базовый путь
+
     public function __construct() {
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $this->uri = $this->normalizeUri($_SERVER['REQUEST_URI']);
         $this->params = $_GET;
         $this->data = $this->getInputData();
     }
-    
+    private function normalizeUri($uri) {
+        // Убираем базовый путь из URI
+        if (strpos($uri, $this->basePath) === 0) {
+            $uri = substr($uri, strlen($this->basePath));
+        }
+        
+        // Убираем query string
+        $uri = parse_url($uri, PHP_URL_PATH);
+        
+        // Убедимся, что URI начинается с /
+        if ($uri === false || $uri === '') {
+            $uri = '/';
+        }
+        
+        // Убираем двойные слеши
+        $uri = preg_replace('#/+#', '/', $uri);
+        
+        return $uri;
+    }
     public function getMethod() {
         return $this->method;
     }

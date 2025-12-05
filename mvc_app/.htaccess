@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /mvc_app/
+
+# Разрешить доступ к реальным файлам и папкам
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Перенаправить все остальное на index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Заголовки для API
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
