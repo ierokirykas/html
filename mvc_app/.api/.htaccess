@@ -1,0 +1,12 @@
+# /var/www/html/mvc_app/.htaccess
+RewriteEngine On
+
+# Перенаправление всех запросов на index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Разрешить все методы для API
+<Limit GET POST PUT DELETE OPTIONS>
+    Require all granted
+</Limit>

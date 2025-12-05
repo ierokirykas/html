@@ -61,12 +61,35 @@ return [
         'uri' => '/auth/logout',
         'handler' => 'AuthController@logout'
     ],
-    
-    // Пример с параметрами
     [
         'methods' => ['GET'],
         'uri' => '/user/{id}/profile',
         'handler' => 'PageController@userProfile'
+    ],
+    [
+        'methods' => ['GET', 'POST'],
+        'uri' => '/auth/register',
+        'handler' => 'AuthController@register'
+    ],
+    [
+        'methods' => ['GET'],
+        'uri' => '/api/users',
+        'handler' => 'ApiController@getAllUsers'
+    ],
+    [
+        'methods' => ['POST'],
+        'uri' => '/api/users',
+        'handler' => 'ApiController@createUser'
+    ],
+    [
+        'methods' => ['PUT'],
+        'uri' => '/api/users/{id}',
+        'handler' => 'ApiController@updateUser'
+    ],
+    [
+        'methods' => ['DELETE'],
+        'uri' => '/api/users/{id}',
+        'handler' => 'ApiController@deleteUser'
     ]
 ];
 ?>
