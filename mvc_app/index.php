@@ -27,7 +27,7 @@ spl_autoload_register(function ($class) {
 });
 
 require_once 'config/database.php';
-require_once 'config/routes.php';
+$routes = include 'config/routes.php';
 
 // Инициализация
 $request = new Core\Request();
